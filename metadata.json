@@ -1,0 +1,5 @@
+{
+  "name": "Global Transport Emissions Zone Model",
+  "description": "A web application to model and estimate real-time CO₂e from road and aviation traffic within a user-defined geographical zone. It uses live traffic and flight data combined with a physics-based emissions model.",
+  "requestFramePermissions": []
+}
