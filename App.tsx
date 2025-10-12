@@ -34,6 +34,13 @@ const ResultsDisplay: React.FC<{ result: ZoneEstimateResponse }> = ({ result }) 
                         <div className="text-right text-[#9aa3b2] mt-2">{result.coverage_km.toFixed(0)} km</div>
                     </>
                 )}
+                
+                {result.grid_intensity && (
+                     <>
+                        <div className="text-[#9aa3b2] mt-2">Grid Intensity ({result.grid_intensity.zone_name})</div>
+                        <div className="text-right text-[#9aa3b2] mt-2">{result.grid_intensity.value} gCO₂e/kWh</div>
+                    </>
+                )}
             </div>
             <div className="text-[#9aa3b2] mt-3 text-xs break-all">
                 <span className="font-semibold">Sources:</span> {result.sources?.join(', ')}
@@ -47,6 +54,16 @@ export default function App() {
   const [polygon, setPolygon] = useState<any | null>(null);
   const [result, setResult] = useState<ZoneEstimateResponse | null>(null);
 
+  const handlePolygonChange = (newPolygon: any | null) => {
+    // When the polygon is created, edited, or deleted, we need to manage the results display.
+    // If a polygon already exists and a change occurs (edit or delete),
+    // the old results are now stale and should be cleared to avoid confusion.
+    if (polygon) {
+      setResult(null);
+    }
+    setPolygon(newPolygon);
+  };
+
   return (
     <main className="h-full w-full bg-[#0f1115] text-[#e8eaf1]">
       <div className="h-full grid grid-cols-1 md:grid-cols-[400px_1fr]">
@@ -55,7 +72,7 @@ export default function App() {
           {result && <ResultsDisplay result={result} />}
         </div>
         <div className="h-full w-full grayscale contrast-[1.1] brightness-[0.8]">
-          <MapCanvas onPolygon={setPolygon} />
+          <MapCanvas onPolygon={handlePolygonChange} />
         </div>
       </div>
     </main>
